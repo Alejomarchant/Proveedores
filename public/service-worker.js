@@ -1,5 +1,11 @@
 const CACHE_NAME = "proveedores-v1";
-const urlsToCache = ["./panel.html", "./panel.js", "./manifest.json", "./icon-192.png", "./icon-512.png"];
+const urlsToCache = [
+  "./index.html",
+  "./panel.js",
+  "./manifest.json",
+  "./icon-192.png",
+  "./icon-512.png"
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
