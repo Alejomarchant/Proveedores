@@ -35,10 +35,16 @@ async function actualizarProveedor(id, proveedor) {
   if (error) throw error;
 }
 
-// 🗑 Eliminar proveedor
+// 🗑 Eliminar proveedor (con logs)
 async function eliminarProveedor(id) {
+  console.log("🧨 ID a eliminar:", id);
   const { error } = await supabase.from("proveedores").delete().eq("id", id);
-  if (error) throw error;
+  if (error) {
+    console.error("❌ Error al eliminar proveedor:", error);
+    throw error;
+  } else {
+    console.log("✅ Proveedor eliminado con éxito:", id);
+  }
 }
 
 // 🧼 Limpiar formulario
@@ -113,8 +119,12 @@ function renderCard(p) {
   deleteBtn.className = "eliminar";
   deleteBtn.onclick = async () => {
     if (confirm(`¿Eliminar a "${p.nombre}"?`)) {
-      await eliminarProveedor(p.id);
-      cargarProveedores();
+      try {
+        await eliminarProveedor(p.id);
+        await cargarProveedores();
+      } catch (err) {
+        alert("❌ No se pudo eliminar. Revisa la consola para más detalles.");
+      }
     }
   };
 
