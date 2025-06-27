@@ -194,5 +194,13 @@ formulario.addEventListener("submit", async (e) => {
     mensaje.style.color = "green";
     limpiarFormulario();
     cargarProveedores();
+  } catch (error) {
+    console.error("❌ Error al guardar proveedor:", error);
+    mensaje.textContent = "❌ No se pudo guardar el proveedor.";
+    mensaje.style.color = "red";
+  }
+});
 
+// 🚀 Ejecutar carga al iniciar
+cargarProveedores();
 }
