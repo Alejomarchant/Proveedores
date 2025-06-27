@@ -119,16 +119,22 @@ function renderCard(p) {
   deleteBtn.textContent = "🗑 Eliminar";
   deleteBtn.className = "eliminar";
   deleteBtn.onclick = async () => {
-    console.log("🗑 Click en eliminar → ID:", p.id);
-    if (confirm(`¿Eliminar a "${p.nombre}"?`)) {
-      try {
-        await eliminarProveedor(p.id);
-        await cargarProveedores();
-      } catch (err) {
-        alert("❌ No se pudo eliminar. Revisa la consola para más detalles.");
-      }
+  console.log("🗑 Click en eliminar → ID:", p.id);
+
+  if (confirm(`¿Eliminar a "${p.nombre}"?`)) {
+    try {
+      console.log("🔄 Llamando a eliminarProveedor...");
+      await eliminarProveedor(p.id);
+      console.log("✅ Llamada exitosa, refrescando lista...");
+      await cargarProveedores();
+    } catch (err) {
+      console.error("❌ Error durante eliminación:", err);
+      alert("❌ No se pudo eliminar. Revisa la consola para más detalles.");
     }
-  };
+  } else {
+    console.log("🚫 Cancelado por el usuario");
+  }
+};
 
   botones.append(editBtn, deleteBtn);
   div.appendChild(botones);
