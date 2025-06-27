@@ -5,63 +5,28 @@
   <title>Panel de Proveedores</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon-192.png" type="image/png" />
-
-  <!-- Instalación como app -->
   <meta name="theme-color" content="#2196f3" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
 
-  <!-- Seguridad CSP -->
-  <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self';
-                 script-src 'self' 'unsafe-eval' https://esm.sh;
-                 connect-src https://hyyzyagxlqgkiwodnmgg.supabase.co;
-                 style-src 'self' 'unsafe-inline';">
   <style>
-    /* ... tus estilos originales permanecen aquí intactos ... */
-  </style>
-</head>
-<body>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2rem;
+      background: #f0f2f5;
+      color: #333;
+    }
 
-  <h1>📦 Panel de Proveedores</h1>
+    h1 { font-size: 2rem; margin-bottom: 1rem; }
+    h2 { font-size: 1.4rem; margin-top: 2rem; }
 
-  <h2>Mayoristas</h2>
-  <div id="listaMayoristas" class="grid"></div>
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
 
-  <h2>Otros</h2>
-  <div id="listaOtros" class="grid"></div>
-
-  <form id="formulario">
-    <h3 id="formTitulo">➕ Agregar proveedor</h3>
-    <input type="hidden" id="proveedorId" />
-    <input type="text" id="rut" placeholder="RUT" />
-    <input type="text" id="nombre" placeholder="Nombre" required />
-    <select id="tipo" required>
-      <option value="">Tipo</option>
-      <option value="Mayorista">Mayorista</option>
-      <option value="Otro">Otro</option>
-    </select>
-    <select id="area">
-      <option value="">Área</option>
-      <option value="Ergostore">Ergostore</option>
-      <option value="Laser">Laser</option>
-      <option value="Remote Media">Remote Media</option>
-    </select>
-    <input type="text" id="contacto" placeholder="Contacto" />
-    <input type="text" id="telefono" placeholder="Teléfono" />
-    <input type="email" id="correo" placeholder="Correo" />
-    <input type="text" id="usuario" placeholder="Usuario (mayoristas)" />
-    <input type="text" id="clave" placeholder="Clave (mayoristas)" />
-    <input type="url" id="enlace" placeholder="Enlace de ingreso" />
-    <input type="text" id="direccion" placeholder="Dirección" />
-    <input type="text" id="observacion" placeholder="Observación" />
-
-    <button type="submit" id="btnSubmit">Agregar proveedor</button>
-    <p id="mensaje"></p>
-  </form>
-
-  <script type="module" src="panel.js"></script>
-  <script src="register-sw.js"></script>
-</body>
-</html>
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 1.2rem;
+      border-left: 5px solid
