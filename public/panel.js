@@ -203,4 +203,3 @@ formulario.addEventListener("submit", async (e) => {
 
 // 🚀 Ejecutar carga al iniciar
 cargarProveedores();
-}
