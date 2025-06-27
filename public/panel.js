@@ -1,13 +1,12 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js";
 
 // 🔐 Conexión Supabase
-c// 🔐 Conexión Supabase
 const supabase = createClient(
   "https://hyyzyagxlqgkiwodnmgg.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5eXp5YWd4bHFna2l3b2RubWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4ODM3ODYsImV4cCI6MjA2NjQ1OTc4Nn0.sDzc98mBTNgkPGt8ahAEZKRU7fY9z9KhOeSAMx693FE"
 );
 
-window.supabase = supabase; // ← 👈 Esta línea lo hace global"
+window.supabase = supabase; // Hacer supabase accesible desde consola
 
 // 📦 Elementos DOM
 const listaMayoristas = document.getElementById("listaMayoristas");
@@ -68,17 +67,14 @@ function renderCard(p) {
     ? `<a href="${p.enlace}" target="_blank">${p.enlace}</a>`
     : "-";
 
-  let contenido = "";
-
-  if (esMayorista) {
-    contenido = `
+  let contenido = esMayorista
+    ? `
       <strong>${p.nombre || "-"}</strong>
       <span>👤 Usuario: ${p.usuario || "-"}</span>
       <span>🔑 Clave: ${p.clave || "-"}</span>
       <span>🔗 Enlace: ${enlaceHTML}</span>
-    `;
-  } else {
-    contenido = `
+    `
+    : `
       <strong>${p.nombre || "-"}</strong>
       <span>🆔 RUT: ${p.rut || "-"}</span>
       <span>🧩 Área: ${p.area || "-"}</span>
@@ -89,7 +85,6 @@ function renderCard(p) {
       <span>📍 Dirección: ${p.direccion || "-"}</span>
       <span>🗒️ Observación: ${p.observacion || "-"}</span>
     `;
-  }
 
   div.innerHTML = contenido;
 
