@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js";
 // 🔐 Conexión Supabase
 const supabase = createClient(
   "https://hyyzyagxlqgkiwodnmgg.supabase.co",
-  "tu-clave-anónima-aquí"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5eXp5YWd4bHFna2l3b2RubWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4ODM3ODYsImV4cCI6MjA2NjQ1OTc4Nn0.sDzc98mBTNgkPGt8ahAEZKRU7fY9z9KhOeSAMx693FE"
 );
 
 // 📦 Elementos DOM
