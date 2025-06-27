@@ -186,9 +186,4 @@ formulario.addEventListener("submit", async (e) => {
 // 🚀 Inicialización
 document.addEventListener("DOMContentLoaded", cargarProveedores);
 
-// 🛠️ Registro del Service Worker para PWA
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js").then(() => {
-    console.log("✅ Service Worker registrado");
-  });
 }
