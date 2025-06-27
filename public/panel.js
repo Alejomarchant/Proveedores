@@ -55,18 +55,134 @@ function renderCard(p) {
   const div = document.createElement("div");
   div.className = "card " + (esMayorista ? "" : "otro");
 
-  div.innerHTML = `
-    <strong>${p.nombre || "-"}</strong>
-    ${ esMayorista
-        ? `
-          <span>👤 Usuario: ${p.usuario || "-"}</span>
-          <span>🔑 Clave: ${p.clave || "-"}</span>
-          <span>🔗 Enlace: ${
-            p.enlace ? `<a href="${p.enlace}" target="_blank">${p.enlace}</a>` : "-"
-          }</span>
-        `
-        : `
-          <span>🆔 RUT: ${p.rut || "-"}</span>
-          <span>🧩 Área: ${p.area || "-"}</span>
-          <span>🔗 Enlace: ${
-            p.enlace
+  const enlaceHTML = p.enlace
+    ? `<a href="${p.enlace}" target="_blank">${p.enlace}</a>`
+    : "-";
+
+  let contenido = "";
+
+  if (esMayorista) {
+    contenido = `
+      <strong>${p.nombre || "-"}</strong>
+      <span>👤 Usuario: ${p.usuario || "-"}</span>
+      <span>🔑 Clave: ${p.clave || "-"}</span>
+      <span>🔗 Enlace: ${enlaceHTML}</span>
+    `;
+  } else {
+    contenido = `
+      <strong>${p.nombre || "-"}</strong>
+      <span>🆔 RUT: ${p.rut || "-"}</span>
+      <span>🧩 Área: ${p.area || "-"}</span>
+      <span>🔗 Enlace: ${enlaceHTML}</span>
+      <span>👤 Contacto: ${p.contacto || "-"}</span>
+      <span>📞 Teléfono: ${p.telefono || "-"}</span>
+      <span>✉️ Correo: ${p.correo || "-"}</span>
+      <span>📍 Dirección: ${p.direccion || "-"}</span>
+      <span>🗒️ Observación: ${p.observacion || "-"}</span>
+    `;
+  }
+
+  div.innerHTML = contenido;
+
+  const botones = document.createElement("div");
+  botones.className = "card-buttons";
+
+  const editBtn = document.createElement("button");
+  editBtn.textContent = "🖊 Editar";
+  editBtn.className = "editar";
+  editBtn.onclick = () => {
+    document.getElementById("proveedorId").value = p.id;
+    document.getElementById("rut").value = p.rut || "";
+    document.getElementById("nombre").value = p.nombre || "";
+    document.getElementById("tipo").value = p.tipo || "";
+    document.getElementById("area").value = p.area || "";
+    document.getElementById("contacto").value = p.contacto || "";
+    document.getElementById("telefono").value = p.telefono || "";
+    document.getElementById("correo").value = p.correo || "";
+    document.getElementById("usuario").value = p.usuario || "";
+    document.getElementById("clave").value = p.clave || "";
+    document.getElementById("enlace").value = p.enlace || "";
+    document.getElementById("direccion").value = p.direccion || "";
+    document.getElementById("observacion").value = p.observacion || "";
+    document.getElementById("formTitulo").textContent = "✏️ Editar proveedor";
+    document.getElementById("btnSubmit").textContent = "Actualizar proveedor";
+  };
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "🗑 Eliminar";
+  deleteBtn.className = "eliminar";
+  deleteBtn.onclick = async () => {
+    if (confirm(`¿Eliminar a "${p.nombre}"?`)) {
+      await eliminarProveedor(p.id);
+      cargarProveedores();
+    }
+  };
+
+  botones.append(editBtn, deleteBtn);
+  div.appendChild(botones);
+  return div;
+}
+
+// 🔄 Cargar proveedores
+async function cargarProveedores() {
+  try {
+    const proveedores = await obtenerProveedores();
+    const mayoristas = proveedores.filter(p => p.tipo?.toLowerCase() === "mayorista");
+    const otros = proveedores.filter(p => p.tipo?.toLowerCase() !== "mayorista");
+
+    listaMayoristas.innerHTML = "";
+    listaOtros.innerHTML = "";
+
+    mayoristas.forEach(p => listaMayoristas.appendChild(renderCard(p)));
+    otros.forEach(p => listaOtros.appendChild(renderCard(p)));
+  } catch (err) {
+    console.error("❌ Error cargando datos:", err);
+    listaMayoristas.innerHTML = "<p style='color:red'>Error al cargar mayoristas.</p>";
+    listaOtros.innerHTML = "<p style='color:red'>Error al cargar otros proveedores.</p>";
+  }
+}
+
+// 📝 Envío del formulario
+formulario.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const proveedor = {
+    rut: document.getElementById("rut").value,
+    nombre: document.getElementById("nombre").value,
+    tipo: document.getElementById("tipo").value,
+    area: document.getElementById("area").value,
+    contacto: document.getElementById("contacto").value,
+    telefono: document.getElementById("telefono").value,
+    correo: document.getElementById("correo").value,
+    usuario: document.getElementById("usuario").value,
+    clave: document.getElementById("clave").value,
+    enlace: document.getElementById("enlace").value,
+    direccion: document.getElementById("direccion").value,
+    observacion: document.getElementById("observacion").value
+  };
+
+  const id = document.getElementById("proveedorId").value;
+
+  try {
+    if (id) {
+      await actualizarProveedor(id, proveedor);
+      mensaje.textContent = "✅ Proveedor actualizado.";
+    } else {
+      await agregarProveedor(proveedor);
+      mensaje.textContent = "✅ Proveedor agregado.";
+    }
+
+    mensaje.style.color = "green";
+    limpiarFormulario();
+    cargarProveedores();
+  } catch (err) {
+    console.error("❌ Error guardando proveedor:", err);
+    mensaje.textContent = "❌ Error al guardar.";
+    mensaje.style.color = "red";
+  }
+
+  setTimeout(() => (mensaje.textContent = ""), 3000);
+});
+
+// 🚀 Inicialización
+document.addEventListener("DOMContentLoaded", cargarProveedores);
