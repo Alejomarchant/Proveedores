@@ -194,3 +194,5 @@ formulario.addEventListener("submit", async (e) => {
     mensaje.style.color = "green";
     limpiarFormulario();
     cargarProveedores();
+
+}
