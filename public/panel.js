@@ -7,6 +7,7 @@ const supabase = createClient(
 );
 
 window.supabase = supabase; // Para pruebas en consola
+console.log("✅ Supabase inicializado y accesible desde consola");
 
 // 📦 Elementos DOM
 const listaMayoristas = document.getElementById("listaMayoristas");
