@@ -53,22 +53,23 @@ async function ejecutarEliminacion(id) {
     return;
   }
 
-  console.log("📦 Iniciando eliminación para ID:", id);
+  console.log("💣 Ejecutando eliminación para proveedor:", id);
+
   try {
     const { error } = await supabase.from("proveedores").delete().eq("id", id);
+    
     if (error) {
       console.error("❌ Supabase rechazó la eliminación:", error);
       alert("❌ No se pudo eliminar el proveedor.");
     } else {
       console.log("✅ Eliminado correctamente:", id);
-      await cargarProveedores();
+      await cargarProveedores(); // Refresca la lista después de borrar
     }
   } catch (err) {
     console.error("💥 Error inesperado:", err);
     alert("💥 Hubo un error general. Revisá consola.");
   }
 }
-
 // 🖼️ Renderizar tarjeta
 function renderCard(p) {
   const esMayorista = p.tipo?.toLowerCase() === "mayorista";
