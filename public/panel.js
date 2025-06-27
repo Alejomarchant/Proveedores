@@ -6,7 +6,7 @@ const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5eXp5YWd4bHFna2l3b2RubWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4ODM3ODYsImV4cCI6MjA2NjQ1OTc4Nn0.sDzc98mBTNgkPGt8ahAEZKRU7fY9z9KhOeSAMx693FE"
 );
 
-window.supabase = supabase; // Hacer supabase accesible desde consola
+window.supabase = supabase; // Para pruebas en consola
 
 // 📦 Elementos DOM
 const listaMayoristas = document.getElementById("listaMayoristas");
@@ -37,24 +37,35 @@ async function actualizarProveedor(id, proveedor) {
   if (error) throw error;
 }
 
-// 🗑 Eliminar proveedor (con logs)
-async function eliminarProveedor(id) {
-  console.log("🧨 ID a eliminar:", id);
-  const { error } = await supabase.from("proveedores").delete().eq("id", id);
-  if (error) {
-    console.error("❌ Error al eliminar proveedor:", error);
-    throw error;
-  } else {
-    console.log("✅ Proveedor eliminado con éxito:", id);
-  }
-}
-
 // 🧼 Limpiar formulario
 function limpiarFormulario() {
   formulario.reset();
   document.getElementById("proveedorId").value = "";
   document.getElementById("formTitulo").textContent = "➕ Agregar proveedor";
   document.getElementById("btnSubmit").textContent = "Agregar proveedor";
+}
+
+// 🧨 Subrutina de eliminación
+async function ejecutarEliminacion(id) {
+  if (!id) {
+    alert("⚠️ ID inválido. No se puede eliminar.");
+    return;
+  }
+
+  console.log("📦 Iniciando eliminación para ID:", id);
+  try {
+    const { error } = await supabase.from("proveedores").delete().eq("id", id);
+    if (error) {
+      console.error("❌ Supabase rechazó la eliminación:", error);
+      alert("❌ No se pudo eliminar el proveedor.");
+    } else {
+      console.log("✅ Eliminado correctamente:", id);
+      await cargarProveedores();
+    }
+  } catch (err) {
+    console.error("💥 Error inesperado:", err);
+    alert("💥 Hubo un error general. Revisá consola.");
+  }
 }
 
 // 🖼️ Renderizar tarjeta
@@ -118,23 +129,12 @@ function renderCard(p) {
   const deleteBtn = document.createElement("button");
   deleteBtn.textContent = "🗑 Eliminar";
   deleteBtn.className = "eliminar";
-  deleteBtn.onclick = async () => {
-  console.log("🗑 Click en eliminar → ID:", p.id);
-
-  if (confirm(`¿Eliminar a "${p.nombre}"?`)) {
-    try {
-      console.log("🔄 Llamando a eliminarProveedor...");
-      await eliminarProveedor(p.id);
-      console.log("✅ Llamada exitosa, refrescando lista...");
-      await cargarProveedores();
-    } catch (err) {
-      console.error("❌ Error durante eliminación:", err);
-      alert("❌ No se pudo eliminar. Revisa la consola para más detalles.");
+  deleteBtn.onclick = () => {
+    console.log("🗑 Click en eliminar → ID:", p.id);
+    if (confirm(`¿Eliminar a "${p.nombre}"?`)) {
+      ejecutarEliminacion(p.id);
     }
-  } else {
-    console.log("🚫 Cancelado por el usuario");
-  }
-};
+  };
 
   botones.append(editBtn, deleteBtn);
   div.appendChild(botones);
@@ -193,14 +193,3 @@ formulario.addEventListener("submit", async (e) => {
     mensaje.style.color = "green";
     limpiarFormulario();
     cargarProveedores();
-  } catch (err) {
-    console.error("❌ Error guardando proveedor:", err);
-    mensaje.textContent = "❌ Error al guardar.";
-    mensaje.style.color = "red";
-  }
-
-  setTimeout(() => (mensaje.textContent = ""), 3000);
-});
-
-// 🚀 Inicialización
-document.addEventListener("DOMContentLoaded", cargarProveedores);
