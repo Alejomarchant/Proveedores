@@ -67,15 +67,18 @@ function renderCard(p) {
     ? `<a href="${p.enlace}" target="_blank">${p.enlace}</a>`
     : "-";
 
-  let contenido = esMayorista
+  let contenido = `
+    <strong>${p.nombre || "-"}</strong>
+    <small style="color:gray; font-size:0.75rem;">🆔 ${p.id}</small>
+  `;
+
+  contenido += esMayorista
     ? `
-      <strong>${p.nombre || "-"}</strong>
       <span>👤 Usuario: ${p.usuario || "-"}</span>
       <span>🔑 Clave: ${p.clave || "-"}</span>
       <span>🔗 Enlace: ${enlaceHTML}</span>
     `
     : `
-      <strong>${p.nombre || "-"}</strong>
       <span>🆔 RUT: ${p.rut || "-"}</span>
       <span>🧩 Área: ${p.area || "-"}</span>
       <span>🔗 Enlace: ${enlaceHTML}</span>
@@ -116,6 +119,7 @@ function renderCard(p) {
   deleteBtn.textContent = "🗑 Eliminar";
   deleteBtn.className = "eliminar";
   deleteBtn.onclick = async () => {
+    console.log("🗑 Click en eliminar → ID:", p.id);
     if (confirm(`¿Eliminar a "${p.nombre}"?`)) {
       try {
         await eliminarProveedor(p.id);
